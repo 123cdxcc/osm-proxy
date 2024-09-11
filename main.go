@@ -2,20 +2,24 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/time/rate"
 	"io"
 	"net/http"
 	"net/url"
 	"osm-proxy/cache"
 	"osm-proxy/config"
 	"regexp"
+	"time"
 )
 
 var (
 	httpClient *http.Client
 	conf       *config.Config
+	limiter    *rate.Limiter
 )
 
 func init() {
@@ -34,6 +38,9 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
+	}
+	if conf.Limit.Rate > 0 {
+		limiter = rate.NewLimiter(rate.Limit(conf.Limit.Rate), conf.Limit.Rate)
 	}
 	var proxy func(*http.Request) (*url.URL, error)
 	if conf.Proxy.Url != "" {
@@ -87,6 +94,14 @@ func start() error {
 		}
 		data, err := cache.Get(urlParam.Key())
 		if err != nil {
+			if limiter != nil {
+				err = limiter.Wait(context.Background())
+				if err != nil {
+					c.AbortWithError(500, err)
+					return
+				}
+			}
+			fmt.Println("缓存无数据，调用远端服务器:", time.Now())
 			data, err = download(fmt.Sprintf("https://tile.openstreetmap.org/%v/%v/%v.png", urlParam.Z, urlParam.X, urlParam.Y))
 			if err != nil {
 				c.AbortWithError(500, err)

@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Cache Cache `json:"cache" yaml:"cache"`
 	Proxy Proxy `json:"proxy" yaml:"proxy"`
+	Limit Limit `json:"limit" yaml:"limit"`
 }
 
 type Cache struct {
@@ -17,6 +18,9 @@ type Cache struct {
 
 type Proxy struct {
 	Url string `json:"url" yaml:"url"`
+}
+type Limit struct {
+	Rate int `json:"rate" yaml:"rate"`
 }
 
 func Load() (*Config, error) {
