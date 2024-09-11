@@ -7,9 +7,15 @@ import (
 )
 
 type Config struct {
-	Cache Cache `json:"cache" yaml:"cache"`
-	Proxy Proxy `json:"proxy" yaml:"proxy"`
-	Limit Limit `json:"limit" yaml:"limit"`
+	Server Server `json:"server" yaml:"server"`
+	Cache  Cache  `json:"cache" yaml:"cache"`
+	Proxy  Proxy  `json:"proxy" yaml:"proxy"`
+	Limit  Limit  `json:"limit" yaml:"limit"`
+}
+
+type Server struct {
+	Host string `json:"host" yaml:"host"`
+	Port string `json:"port" yaml:"port"`
 }
 
 type Cache struct {

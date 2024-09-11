@@ -19,6 +19,7 @@ var (
 	httpClient *http.Client
 	conf       *config.Config
 	limiter    *rate.Limiter
+	server     = ":"
 )
 
 func init() {
@@ -26,6 +27,15 @@ func init() {
 	conf, err = config.Load()
 	if err != nil {
 		panic(err)
+	}
+	if conf.Server.Host != "" {
+		server = conf.Server.Host + server
+	}
+	if conf.Server.Port != "" {
+		server = server + conf.Server.Port
+	}
+	if server == ":" {
+		server = ":8080"
 	}
 	if conf.Cache.Dir != "" {
 		err = cache.Init(conf.Cache.Dir)
@@ -111,7 +121,7 @@ func start() error {
 		c.Data(200, "image/png", data)
 		return
 	})
-	err = r.Run(":8089")
+	err = r.Run(server)
 	if err != nil {
 		return err
 	}
