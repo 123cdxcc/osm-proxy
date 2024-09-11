@@ -1,0 +1,4 @@
+cache:
+  dir: "map_cache"
+proxy:
+  url: "http://127.0.0.1:1080"
