@@ -13,7 +13,6 @@ import (
 	"osm-proxy/cache"
 	"osm-proxy/config"
 	"regexp"
-	"time"
 )
 
 var (
@@ -101,7 +100,7 @@ func start() error {
 					return
 				}
 			}
-			fmt.Println("缓存无数据，调用远端服务器:", time.Now())
+			//fmt.Println(urlParam.Key(), "缓存无数据，调用远端服务器:", time.Now())
 			data, err = download(fmt.Sprintf("https://tile.openstreetmap.org/%v/%v/%v.png", urlParam.Z, urlParam.X, urlParam.Y))
 			if err != nil {
 				c.AbortWithError(500, err)
@@ -124,7 +123,7 @@ func download(url string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("User-Agent", "com.rss.xyz")
+	req.Header.Set("User-Agent", "xyz.rsss.map")
 	resp, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
