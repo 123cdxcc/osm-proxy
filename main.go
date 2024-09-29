@@ -111,7 +111,8 @@ func start() error {
 				}
 			}
 			//fmt.Println(urlParam.Key(), "缓存无数据，调用远端服务器:", time.Now())
-			data, err = download(fmt.Sprintf("https://tile.openstreetmap.org/%v/%v/%v.png", urlParam.Z, urlParam.X, urlParam.Y))
+			//data, err = download(fmt.Sprintf("https://tile.openstreetmap.org/%v/%v/%v.png", urlParam.Z, urlParam.X, urlParam.Y))
+			data, err = download(fmt.Sprintf("https://b.tile-cyclosm.openstreetmap.fr/cyclosm/%v/%v/%v.png", urlParam.Z, urlParam.X, urlParam.Y))
 			if err != nil {
 				c.AbortWithError(500, err)
 				return
